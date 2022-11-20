@@ -13,11 +13,7 @@ def load_model():
     # 最終ノードの出力を2にする
     in_features = net.classifier[6].in_features
     net.classifier[6] = nn.Linear(in_features, 2)
-    net.load_state_dict(
-        torch.load(
-            "/Users/ando/project/obenkyo/PIzzaNet.pkl", map_location=torch.device("cpu")
-        )
-    )
+    net.load_state_dict(torch.load("PizzaNet.pkl", map_location=torch.device("cpu")))
     return net
 
 
@@ -64,20 +60,20 @@ else:
     predictions = upload_predict(image, net)
     image_class = np.argmax(predictions.detach().numpy())
     if image_class == 1:
-        ans = "Pizza"
+        ans = "This is a Pizza❗"
     else:
-        ans = "Not Pizza"
+        ans = "This is Not a Pizza❗"
 
     softmax = nn.Softmax()
     score = np.round(torch.max(softmax(predictions)).item()) * 100
     st.write(
         """
-             # AIの判定結果 """,
+             # Result(判定結果): """,
         ans,
     )
     st.write(
         """
-             # AIの確信度(%) """,
+             # Score(%): """,
         score,
         "%",
     )
